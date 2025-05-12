@@ -94,17 +94,16 @@ def process_solutions(problems_dir, target_dir):
                     tag = read_desc_file(desc_path)
 
                     # Move file if tag is MAIN or ACCEPTED
-                    if tag in ["MAIN", "ACCEPTED"]:
-                        # Use main_solution name if tag is MAIN, otherwise use original filename
-                        target_filename = (
-                            "main_solution.cpp" if tag == "MAIN" else file[:-5]
-                        )
-                        target_file = os.path.join(target_problem_dir, target_filename)
-                        try:
-                            shutil.copy2(cpp_path, target_file)
-                            print(f"Moved solution: {cpp_path} -> {target_file}")
-                        except Exception as e:
-                            print(f"Error moving file {cpp_path}: {e}")
+                    if tag == "MAIN":
+                        tag = "MAIN_SOLUTION"
+                    # Prepend the tag to the filename
+                    target_filename = f"[{tag}] {file[:-5]}"
+                    target_file = os.path.join(target_problem_dir, target_filename)
+                    try:
+                        shutil.copy2(cpp_path, target_file)
+                        print(f"Moved solution: {cpp_path} -> {target_file}")
+                    except Exception as e:
+                        print(f"Error moving file {cpp_path}: {e}")
 
 
 def main():
