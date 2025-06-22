@@ -96,9 +96,11 @@ def process_solutions(problems_dir, target_dir):
 
                     # Move file if tag is MAIN or ACCEPTED
                     if tag == "MAIN":
-                        tag = "[MAIN_SOLUTION]"
+                        tag = "MAIN_SOLUTION"
                     # Prepend the tag to the filename
                     target_filename = f"[{tag}] {file[:-5]}"
+                    if tag == "MAIN_SOLUTION":
+                        target_filename = "___" + target_filename + "___"
                     target_file = os.path.join(target_problem_dir, target_filename)
                     try:
                         shutil.copy2(cpp_path, target_file)
