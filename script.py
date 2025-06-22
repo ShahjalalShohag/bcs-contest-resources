@@ -8,18 +8,19 @@ This script is used to move the accepted solutions from the problems directory (
 
 # == START CONFIG == #
 POLYGON_PROBLEMS_DIR = "problems"  # Source directory containing polygon problem folders (can be downloaded from Polygon by clicking on "Download Package")
-TARGET_DIR = "duet_iupc_2025"  # Target directory to move the accepted solutions
+TARGET_DIR = "uu_iupc_2025"  # Target directory to move the accepted solutions
 PROBLEM_NAMES = """
-A. Pair Pressure
-B. The Last Bit of Us
-C. Triangle Trap
-D. An Interesting Problem
-E. Polynomial K Paths
-F. Distinct of Distincts
-G. To Infinity and Beyond
-H. Litmus Test
-I. XOR This OR That
-J. LCM Factorization
+A. Edgy Graph
+B. Red Dead Redemption 2
+C. Binomial XOR
+D. Symmetric Swap
+E. The Perfect Spider Web
+F. Divisible Perfection
+G. MEX-imum Beauty
+H. Substring Symphony
+I. Statue on a Permutation
+J. Sublime Replacement
+K. Math Madness
 """
 # == END CONFIG == #
 
@@ -95,7 +96,7 @@ def process_solutions(problems_dir, target_dir):
 
                     # Move file if tag is MAIN or ACCEPTED
                     if tag == "MAIN":
-                        tag = "MAIN_SOLUTION"
+                        tag = "[MAIN_SOLUTION]"
                     # Prepend the tag to the filename
                     target_filename = f"[{tag}] {file[:-5]}"
                     target_file = os.path.join(target_problem_dir, target_filename)

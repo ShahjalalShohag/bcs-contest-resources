@@ -1,0 +1,194 @@
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace std;
+using namespace __gnu_pbds;
+
+#define pb push_back
+
+void induced_sort(const vector<int> &vec, int val_range, vector<int> &SA, const vector<bool> &sl, const vector<int> &lms_idx) {
+    vector<int> l(val_range, 0), r(val_range, 0);
+    for (int c : vec) {
+        if (c + 1 < val_range) ++l[c + 1];
+        ++r[c];
+    }
+    partial_sum(l.begin(), l.end(), l.begin());
+    partial_sum(r.begin(), r.end(), r.begin());
+    fill(SA.begin(), SA.end(), -1);
+    for (int i = lms_idx.size() - 1; i >= 0; --i)
+        SA[--r[vec[lms_idx[i]]]] = lms_idx[i];
+    for (int i : SA)
+        if (i >= 1 && sl[i - 1]) {
+            SA[l[vec[i - 1]]++] = i - 1;
+        }
+    fill(r.begin(), r.end(), 0);
+    for (int c : vec)
+        ++r[c];
+    partial_sum(r.begin(), r.end(), r.begin());
+    for (int k = SA.size() - 1, i = SA[k]; k >= 1; --k, i = SA[k])
+        if (i >= 1 && !sl[i - 1]) {
+            SA[--r[vec[i - 1]]] = i - 1;
+        }
+}
+   
+vector<int> SA_IS(const vector<int> &vec, int val_range) {
+    const int n = vec.size();
+    vector<int> SA(n), lms_idx;
+    vector<bool> sl(n);
+    sl[n - 1] = false;
+    for (int i = n - 2; i >= 0; --i) {
+        sl[i] = (vec[i] > vec[i + 1] || (vec[i] == vec[i + 1] && sl[i + 1]));
+        if (sl[i] && !sl[i + 1]) lms_idx.push_back(i + 1);
+    }
+    reverse(lms_idx.begin(), lms_idx.end());
+    induced_sort(vec, val_range, SA, sl, lms_idx);
+    vector<int> new_lms_idx(lms_idx.size()), lms_vec(lms_idx.size());
+    for (int i = 0, k = 0; i < n; ++i)
+        if (!sl[SA[i]] && SA[i] >= 1 && sl[SA[i] - 1]) {
+            new_lms_idx[k++] = SA[i];
+        }
+    int cur = 0;
+    SA[n - 1] = cur;
+    for (size_t k = 1; k < new_lms_idx.size(); ++k) {
+        int i = new_lms_idx[k - 1], j = new_lms_idx[k];
+        if (vec[i] != vec[j]) {
+            SA[j] = ++cur;
+            continue;
+        }
+        bool flag = false;
+        for (int a = i + 1, b = j + 1;; ++a, ++b) {
+            if (vec[a] != vec[b]) {
+                flag = true;
+                break;
+            }
+            if ((!sl[a] && sl[a - 1]) || (!sl[b] && sl[b - 1])) {
+                flag = !((!sl[a] && sl[a - 1]) && (!sl[b] && sl[b - 1]));
+                break;
+            }
+        }
+        SA[j] = (flag ? ++cur : cur);
+    }
+    for (size_t i = 0; i < lms_idx.size(); ++i)
+        lms_vec[i] = SA[lms_idx[i]];
+    if (cur + 1 < (int)lms_idx.size()) {
+        auto lms_SA = SA_IS(lms_vec, cur + 1);
+        for (size_t i = 0; i < lms_idx.size(); ++i) {
+            new_lms_idx[i] = lms_idx[lms_SA[i]];
+        }
+    }
+    induced_sort(vec, val_range, SA, sl, new_lms_idx);
+    return SA;
+}
+vector<int> suffix_array(const string &s, const int LIM = 128) {
+    vector<int> vec(s.size() + 1);
+    copy(begin(s), end(s), begin(vec));
+    vec.back() = '!';
+    auto ret = SA_IS(vec, LIM);
+    ret.erase(ret.begin());
+    return ret;
+}
+
+vector<int> lcp_construction(string const& s, vector<int> const& p) {
+    int n = s.size();
+    vector<int> rank(n, 0);
+    for (int i = 0; i < n; i++)
+        rank[p[i]] = i;
+
+    int k = 0;
+    vector<int> lcp(n, 0);
+    for (int i = 0; i < n; i++) {
+        if (rank[i] == n - 1) {
+            k = 0;
+            continue;
+        }
+        int j = p[rank[i] + 1];
+        while (i + k < n && j + k < n && s[i+k] == s[j+k])
+            k++;
+        lcp[rank[i]+1] = k;
+        if (k)
+            k--;
+    }
+    return lcp;
+}
+int node[2000001], ran[400001];
+
+void build(int n, int l, int r){
+    if(l==r){
+        node[n]=ran[l];
+        return;
+    }
+    if(l==(l+r)/2) node[2*n]=ran[l];
+    else build(2*n, l, (l+r)/2);
+
+    if(r==(l+r)/2+1) node[2*n+1]=ran[r];
+    else build(2*n+1, (l+r)/2+1, r);
+    node[n]=min(node[2*n], node[2*n+1]);
+}
+
+int query(int n, int l, int r, int i, int j){
+    if(r<i || l>j){
+        return INT_MAX;
+    }
+    if(l>=i && r<=j){
+        return node[n];
+    }
+    return min(query(2*n,l,(l+r)/2,i,j), query(2*n+1,(l+r)/2+1,r,i,j));
+}
+
+
+int main()
+{   
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);cout.tie(NULL);
+
+    int t;
+    cin>>t;
+
+    while(t--){
+        int n,m,q;
+        cin>>n>>m>>q;
+        string p,b,s;
+        cin>>p>>b;
+        s=p+"$"+b+"#";
+    
+        int len=s.size();
+
+        vector<int> sa = suffix_array(s);
+        vector<int> lcp = lcp_construction(s, sa);
+
+        // cout<<s<<" "<<sa.size()<<endl;
+        // for(int i=0;i<len;i++) cout<<i<<" "<<sa[i]<<" "<<lcp[i]<<endl;
+        for(int i=0;i<=m;i++) ran[i]=0;
+        
+        for(int i=1,mn=0;i<len;i++){
+            if(sa[i]<n) continue;
+            if(sa[i-1]<n) mn=lcp[i];
+            mn=min(mn, lcp[i]);
+            ran[sa[i]-n-1]=max(ran[sa[i]-n-1],mn);
+        }
+        for(int i=len-2,mn=0;i>=0;i--){
+            if(sa[i]<n) continue;
+            if(sa[i+1]<n) mn=lcp[i+1];
+            ran[sa[i]-n-1]=max(ran[sa[i]-n-1],mn);
+            mn=min(mn, lcp[i]);
+        }
+        build(1, 0, m-1);
+        while(q--){
+            int l,r,out=0;
+            cin>>l>>r;
+            l--,r--;
+            int lf=1, rt=r-l+1;
+            while(lf<=rt){
+                int md=(lf+rt)/2;
+                int mn=query(1,0,m-1,l,r-md+1);
+                if(mn>=md){
+                    out=md;
+                    lf=md+1;
+                }
+                else rt=md-1;
+            }
+            cout<<out<<endl;
+        }
+    }
+	return 0;
+}
