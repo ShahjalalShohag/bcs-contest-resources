@@ -8,19 +8,19 @@ This script is used to move the accepted solutions from the problems directory (
 
 # == START CONFIG == #
 POLYGON_PROBLEMS_DIR = "problems"  # Source directory containing polygon problem folders (can be downloaded from Polygon by clicking on "Download Package")
-TARGET_DIR = "uu_iupc_2025"  # Target directory to move the accepted solutions
+TARGET_DIR = "cuet_iupc_2025"  # Target directory to move the accepted solutions
 PROBLEM_NAMES = """
-A. Edgy Graph
-B. Red Dead Redemption 2
-C. Binomial XOR
-D. Symmetric Swap
-E. The Perfect Spider Web
-F. Divisible Perfection
-G. MEX-imum Beauty
-H. Substring Symphony
-I. Statue on a Permutation
-J. Sublime Replacement
-K. Math Madness
+A. Kill Two Birds with One Stone
+B. K Floors Down
+C. Pattern Purifier
+D. The AND, The OR, and The XOR
+E. A Slice of Pi
+F. Survival of the Fated
+G. Pascal's Tree
+H. Prime Triangles
+I. Peak Reduction
+J. The Power of the Sun
+K. The Great Withering
 """
 # == END CONFIG == #
 
