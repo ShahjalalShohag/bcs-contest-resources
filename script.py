@@ -8,19 +8,19 @@ This script is used to move the accepted solutions from the problems directory (
 
 # == START CONFIG == #
 POLYGON_PROBLEMS_DIR = "problems"  # Source directory containing polygon problem folders (can be downloaded from Polygon by clicking on "Download Package")
-TARGET_DIR = "cuet_iupc_2025"  # Target directory to move the accepted solutions
+TARGET_DIR = "duet_iupc_2026"  # Target directory to move the accepted solutions
 PROBLEM_NAMES = """
-A. Kill Two Birds with One Stone
-B. K Floors Down
-C. Pattern Purifier
-D. The AND, The OR, and The XOR
-E. A Slice of Pi
-F. Survival of the Fated
-G. Pascal's Tree
-H. Prime Triangles
-I. Peak Reduction
-J. The Power of the Sun
-K. The Great Withering
+A. A Name of One's Own
+B. Singularity
+C. Level Up
+D. Skill Issue
+E. Tangled
+F. Ebb and Flow
+G. An Odd Problem
+H. Echoes of Erasure
+I. The Paintress
+J. Know Your Place
+K. Relatively Speaking
 """
 # == END CONFIG == #
 
@@ -94,13 +94,15 @@ def process_solutions(problems_dir, target_dir):
                     # Read tag from desc file
                     tag = read_desc_file(desc_path)
 
-                    # Move file if tag is MAIN or ACCEPTED
+                    # Keep only MAIN and ACCEPTED solutions
+                    if tag not in ("MAIN", "ACCEPTED"):
+                        print(f"Skipping non-accepted solution ({tag}): {cpp_path}")
+                        continue
+
                     if tag == "MAIN":
                         tag = "MAIN_SOLUTION"
                     # Prepend the tag to the filename
                     target_filename = f"[{tag}] {file[:-5]}"
-                    if tag == "MAIN_SOLUTION":
-                        target_filename = "000" + target_filename
                     target_file = os.path.join(target_problem_dir, target_filename)
                     try:
                         shutil.copy2(cpp_path, target_file)
