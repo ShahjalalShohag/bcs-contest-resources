@@ -8,19 +8,20 @@ This script is used to move the accepted solutions from the problems directory (
 
 # == START CONFIG == #
 POLYGON_PROBLEMS_DIR = "problems"  # Source directory containing polygon problem folders (can be downloaded from Polygon by clicking on "Download Package")
-TARGET_DIR = "duet_iupc_2026"  # Target directory to move the accepted solutions
+TARGET_DIR = "sust_iupc_2026"  # Target directory to move the accepted solutions
 PROBLEM_NAMES = """
-A. A Name of One's Own
-B. Singularity
-C. Level Up
-D. Skill Issue
-E. Tangled
-F. Ebb and Flow
-G. An Odd Problem
-H. Echoes of Erasure
-I. The Paintress
-J. Know Your Place
-K. Relatively Speaking
+A. Mad Max
+B. Difference Engine
+C. Parallel Lives
+D. Double Blind
+E. A Distinct Problem
+F. Shortest Paths
+G. Fairy Lights
+H. Standoff
+I. Spot the Difference
+J. Prefix Split
+K. Prime Coloring
+L. Appending LIS
 """
 # == END CONFIG == #
 
